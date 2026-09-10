@@ -1,0 +1,8 @@
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.DS_Store
+*.log
+AGENTS.md
+CLAUDE.md
