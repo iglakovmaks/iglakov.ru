@@ -6,7 +6,7 @@ out/
 *.log
 AGENTS.md
 CLAUDE.md
-avae.png
-switchlangicon.png
-EngDeckicon.png
-ChessHelpericon.png
+/avae.png
+/switchlangicon.png
+/EngDeckicon.png
+/ChessHelpericon.png
