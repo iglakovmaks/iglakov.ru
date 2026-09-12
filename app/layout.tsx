@@ -4,16 +4,16 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL('https://iglakov.ru'),
   title: {
-    default: 'Максим Иглаков — приложения, которыми хочется пользоваться',
-    template: '%s — Максим Иглаков',
+    default: 'iglakovmaks — digital products',
+    template: '%s — iglakovmaks',
   },
   description:
-    'Портфолио приложений Максима Иглакова. Небольшие цифровые продукты с вниманием к деталям.',
+    'Портфолио iglakovmaks: приложения, интерфейсы и цифровые продукты.',
   openGraph: {
-    title: 'Максим Иглаков — приложения, которыми хочется пользоваться',
+    title: 'iglakovmaks — digital products',
     description: 'Коллекция приложений, идей и цифровых продуктов.',
     url: 'https://iglakov.ru',
-    siteName: 'Максим Иглаков',
+    siteName: 'iglakovmaks',
     locale: 'ru_RU',
     type: 'website',
   },

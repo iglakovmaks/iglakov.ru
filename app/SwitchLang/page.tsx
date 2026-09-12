@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
@@ -19,7 +20,7 @@ export default function SwitchLangPage() {
     <main className="project-page">
       <header className="site-header project-header">
         <div className="container nav-wrap">
-          <Link className="brand" href="/" aria-label="На главную"><span className="brand-mark">M</span><span className="brand-name">Максим Иглаков</span></Link>
+          <Link className="brand" href="/" aria-label="На главную"><span className="brand-mark">i</span><span className="brand-name">iglakovmaks</span></Link>
           <Link className="back-link" href="/"><span>←</span> Все проекты</Link>
           <a className="nav-status" href="mailto:hello@iglakov.ru"><span className="status-dot" /> На связи</a>
         </div>
@@ -37,7 +38,7 @@ export default function SwitchLangPage() {
             <div className="product-glow" />
             <div className="product-device">
               <div className="product-device-top"><span>SwitchLang</span><span>⌘ K</span></div>
-              <div className="product-device-body"><span className="device-caption">CURRENT INPUT</span><strong>Русский</strong><div className="device-switch"><span>Я</span><i /><span>A</span></div><span className="device-hint">Press shortcut to switch</span></div>
+              <div className="product-device-body"><Image className="switchlang-detail-icon" src="/assets/switchlangicon.png" alt="SwitchLang icon" width={70} height={70} /><span className="device-caption">CURRENT INPUT</span><strong>Русский</strong><div className="device-switch"><span>Я</span><i /><span>A</span></div><span className="device-hint">Press shortcut to switch</span></div>
             </div>
             <div className="product-orbit orbit-a" /><div className="product-orbit orbit-b" />
           </div>
@@ -53,7 +54,7 @@ export default function SwitchLangPage() {
 
       <section className="project-quote"><div className="container quote-inner"><span className="quote-mark">“</span><p>Хороший инструмент<br /><em>не требует объяснений.</em></p></div></section>
 
-      <footer className="site-footer"><div className="container footer-inner"><span>© 2026 Максим Иглаков</span><Link href="/">Все проекты ↗</Link></div></footer>
+      <footer className="site-footer"><div className="container footer-inner"><span>© 2026 iglakovmaks</span><Link href="/">Все проекты ↗</Link></div></footer>
     </main>
   );
 }
