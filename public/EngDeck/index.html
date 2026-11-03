@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <meta name="description" content="EngDeck is a native macOS app for learning English vocabulary with elegant cards, saved words, shuffle mode, and pronunciation playback.">
+  <title>EngDeck - English Vocabulary for macOS</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --blue: #0364e1;
+      --ink: #101114;
+      --muted: #6f737a;
+      --line: rgba(16, 17, 20, .12);
+      --surface: rgba(255, 255, 255, .72);
+      --surface-strong: rgba(255, 255, 255, .92);
+      --canvas-a: #fafafa;
+      --canvas-b: #edf0f3;
+      --shadow: 0 30px 90px rgba(16, 17, 20, .14);
+      --radius-xl: 42px;
+      --radius-lg: 30px;
+      --radius-md: 22px;
+      --radius-sm: 16px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #f5f5f7;
+        --muted: #a7abb2;
+        --line: rgba(255, 255, 255, .14);
+        --surface: rgba(26, 27, 30, .66);
+        --surface-strong: rgba(31, 32, 35, .92);
+        --canvas-a: #050608;
+        --canvas-b: #16181d;
+        --shadow: 0 30px 90px rgba(0, 0, 0, .45);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background:
+        linear-gradient(180deg, var(--canvas-a) 0%, var(--canvas-b) 58%, var(--canvas-a) 100%);
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+      letter-spacing: 0;
+      background:
+        linear-gradient(115deg, rgba(3, 100, 225, .08), transparent 35%),
+        linear-gradient(245deg, rgba(52, 199, 89, .08), transparent 34%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      width: min(1260px, calc(100% - 40px));
+      min-height: 100vh;
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 16px;
+      z-index: 5;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      backdrop-filter: blur(22px) saturate(170%);
+      -webkit-backdrop-filter: blur(22px) saturate(170%);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    .brand img {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .nav a {
+      padding: 8px 10px;
+      border-radius: 14px;
+    }
+
+    .nav a:hover {
+      color: var(--ink);
+      background: rgba(127, 127, 127, .1);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(36px, 6vw, 90px);
+      padding: clamp(28px, 4vw, 64px) 0 clamp(76px, 9vw, 130px);
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    h1 {
+      max-width: 740px;
+      margin: 0;
+      font-size: clamp(48px, 6.6vw, 88px);
+      line-height: .96;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 620px;
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: clamp(20px, 2vw, 28px);
+      line-height: 1.24;
+      font-weight: 430;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-top: 36px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 22px;
+      border-radius: 999px;
+      font-size: 16px;
+      font-weight: 680;
+      border: 1px solid transparent;
+    }
+
+    .button.primary {
+      color: #fff;
+      background: var(--blue);
+      box-shadow: 0 14px 28px rgba(3, 100, 225, .25);
+    }
+
+    .button.secondary {
+      color: var(--ink);
+      background: var(--surface-strong);
+      border-color: var(--line);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .meta {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .product {
+      position: relative;
+      min-height: 620px;
+      display: grid;
+      place-items: center;
+    }
+
+    .halo {
+      position: absolute;
+      inset: 7% 0 4%;
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, .52), rgba(255, 255, 255, .12)),
+        linear-gradient(315deg, rgba(3, 100, 225, .14), rgba(52, 199, 89, .1));
+      filter: blur(.2px);
+      transform: rotate(-4deg);
+      border: 1px solid var(--line);
+    }
+
+    .screenshot-card {
+      position: relative;
+      width: min(100%, 700px);
+      margin: 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(26px) saturate(160%);
+      -webkit-backdrop-filter: blur(26px) saturate(160%);
+    }
+
+    .screenshot-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--line);
+      border-radius: calc(var(--radius-xl) - 12px);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding-bottom: clamp(68px, 8vw, 110px);
+    }
+
+    .feature {
+      min-height: 150px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .feature strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    .feature span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .showcase {
+      padding: clamp(72px, 10vw, 140px) 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-copy {
+      display: grid;
+      grid-template-columns: minmax(0, .75fr) minmax(280px, .25fr);
+      align-items: end;
+      gap: 28px;
+      margin-bottom: 34px;
+    }
+
+    .section-copy h2 {
+      max-width: 820px;
+      margin: 0;
+      font-size: clamp(36px, 5vw, 72px);
+      line-height: 1;
+      font-weight: 740;
+      letter-spacing: 0;
+    }
+
+    .section-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .wide-shot {
+      margin: 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(26px) saturate(160%);
+      -webkit-backdrop-filter: blur(26px) saturate(160%);
+    }
+
+    .wide-shot img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: calc(var(--radius-xl) - 12px);
+    }
+
+    .details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      padding-bottom: clamp(72px, 9vw, 128px);
+    }
+
+    .detail {
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    .detail-number {
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 760;
+    }
+
+    .detail h3 {
+      margin: 0;
+      font-size: clamp(24px, 2.5vw, 34px);
+      line-height: 1.05;
+      font-weight: 720;
+      letter-spacing: 0;
+    }
+
+    .detail p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.42;
+    }
+
+    .download-panel {
+      margin-bottom: clamp(76px, 10vw, 136px);
+      padding: clamp(36px, 6vw, 74px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(135deg, rgba(3, 100, 225, .13), transparent 46%),
+        var(--surface-strong);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(26px) saturate(160%);
+      -webkit-backdrop-filter: blur(26px) saturate(160%);
+    }
+
+    .download-panel h2 {
+      max-width: 720px;
+      margin: 0;
+      font-size: clamp(36px, 5vw, 68px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .download-panel p {
+      max-width: 620px;
+      margin: 18px 0 30px;
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px 0 34px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 900px) {
+      .shell {
+        width: min(100% - 28px, 680px);
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 34px;
+      }
+
+      .product {
+        min-height: auto;
+      }
+
+      .features {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .section-copy,
+      .details {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .topbar {
+        top: 10px;
+        margin-top: 10px;
+      }
+
+      .nav a:not(.download-link) {
+        display: none;
+      }
+
+      h1 {
+        font-size: 48px;
+      }
+
+      .actions {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="EngDeck home">
+        <img src="assets/engdeck-icon.png" alt="">
+        <span>EngDeck</span>
+      </a>
+      <nav class="nav">
+        <a href="#features">Features</a>
+        <a href="https://github.com/iglakovmaks/EngDeck" rel="noreferrer">GitHub</a>
+        <a class="download-link" href="https://github.com/iglakovmaks/EngDeck/releases/download/v1.0.0/EngDeck-1.0.0.dmg">Download</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Native vocabulary cards for macOS</p>
+          <h1>Learn English with a quieter deck.</h1>
+          <p class="lead">EngDeck turns everyday English into clean, focused cards with CEFR levels, saved words, shuffle mode, and pronunciation playback.</p>
+          <div class="actions">
+            <a class="button primary" href="https://github.com/iglakovmaks/EngDeck/releases/download/v1.0.0/EngDeck-1.0.0.dmg">Download for macOS</a>
+            <a class="button secondary" href="https://github.com/iglakovmaks/EngDeck/releases/tag/v1.0.0" rel="noreferrer">View release</a>
+          </div>
+          <p class="meta">Version 1.0.0 - 3 MB - requires macOS 26 or later</p>
+        </div>
+
+        <div class="product" aria-label="EngDeck app preview">
+          <div class="halo" aria-hidden="true"></div>
+          <figure class="screenshot-card">
+          <img src="assets/app-screenshot.png" alt="EngDeck macOS app with CEFR levels, vocabulary card, translation, and navigation controls.">
+          </figure>
+        </div>
+      </section>
+
+      <section class="features" id="features" aria-label="EngDeck features">
+        <div class="feature">
+          <strong>A1-C2 levels</strong>
+          <span>Bundled English-Russian dictionaries for every CEFR stage.</span>
+        </div>
+        <div class="feature">
+          <strong>Saved words</strong>
+          <span>Mark difficult cards and return to them in one focused list.</span>
+        </div>
+        <div class="feature">
+          <strong>Smart flow</strong>
+          <span>Shuffle, go back, move forward, and switch EN/RU direction.</span>
+        </div>
+        <div class="feature">
+          <strong>Pronunciation</strong>
+          <span>Listen to each word directly from the card.</span>
+        </div>
+      </section>
+
+      <section class="showcase" aria-label="EngDeck screenshot">
+        <div class="section-copy">
+          <h2>A clean space for one word at a time.</h2>
+          <p>EngDeck keeps the interface quiet: levels on the left, one focused card on the right, and the actions you need exactly where your hand expects them.</p>
+        </div>
+        <figure class="wide-shot">
+          <img src="assets/app-screenshot.png" alt="Full EngDeck app screenshot on macOS.">
+        </figure>
+      </section>
+
+      <section class="details" aria-label="How EngDeck works">
+        <article class="detail">
+          <span class="detail-number">01</span>
+          <h3>Pick your level.</h3>
+          <p>Move from A1 to C2 with bundled vocabulary lists that scale from everyday words to advanced expressions.</p>
+        </article>
+        <article class="detail">
+          <span class="detail-number">02</span>
+          <h3>Reveal the translation.</h3>
+          <p>Tap the card to bring the Russian meaning into view while keeping the original word visible for recall.</p>
+        </article>
+        <article class="detail">
+          <span class="detail-number">03</span>
+          <h3>Save what matters.</h3>
+          <p>Flag hard words, shuffle the deck, switch EN/RU direction, and listen to pronunciation without leaving the card.</p>
+        </article>
+      </section>
+
+      <section class="download-panel" aria-label="Download EngDeck">
+        <h2>Ready for your Mac.</h2>
+        <p>Download the polished DMG, drag EngDeck into Applications, and start learning from the first card.</p>
+        <a class="button primary" href="https://github.com/iglakovmaks/EngDeck/releases/download/v1.0.0/EngDeck-1.0.0.dmg">Download for macOS</a>
+      </section>
+    </main>
+
+    <footer>
+      <span>EngDeck 1.0.0 for macOS</span>
+      <a href="https://github.com/iglakovmaks/EngDeck/releases/download/v1.0.0/EngDeck-1.0.0.dmg">Download DMG</a>
+    </footer>
+  </div>
+</body>
+</html>

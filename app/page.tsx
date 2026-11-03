@@ -8,9 +8,7 @@ type Project = {
   description: string;
   icon: string;
   href: string;
-  action: string;
   tags: string[];
-  internal?: boolean;
 };
 
 const projects: Project[] = [
@@ -20,10 +18,8 @@ const projects: Project[] = [
     kind: 'macOS utility',
     description: 'Переключение языка ввода в одно движение. Маленький инструмент для большого потока.',
     icon: '/assets/switchlangicon.png',
-    href: '/SwitchLang',
-    action: 'О проекте',
+    href: '/SwitchLang/',
     tags: ['Swift', 'macOS'],
-    internal: true,
   },
   {
     number: '02',
@@ -31,8 +27,7 @@ const projects: Project[] = [
     kind: 'Language learning',
     description: 'Карточки и быстрые повторения для тех, кто хочет сделать английский ежедневной привычкой.',
     icon: '/assets/EngDeckicon.png',
-    href: 'https://iglakovmaks.github.io/EngDeck/',
-    action: 'Открыть сайт',
+    href: '/EngDeck/',
     tags: ['Swift', 'Education'],
   },
   {
@@ -41,8 +36,7 @@ const projects: Project[] = [
     kind: 'Chess companion',
     description: 'Спокойный помощник для разбора шахматных позиций, партий и следующих сильных ходов.',
     icon: '/assets/ChessHelpericon.png',
-    href: 'https://iglakovmaks.github.io/chess_helper_site/',
-    action: 'Открыть сайт',
+    href: '/ChessHelper/',
     tags: ['Python', 'Chess'],
   },
 ];
@@ -56,17 +50,17 @@ function ArrowIcon() {
 }
 
 function ProjectCard({ project }: { project: Project }) {
-  const linkProps = project.internal ? {} : { target: '_blank', rel: 'noreferrer' };
-
   return (
     <article className="project-card">
       <div className="project-card-top">
         <span className="project-number">{project.number}</span>
         <span className="project-kind">{project.kind}</span>
       </div>
-      <div className="project-icon-wrap">
-        <Image src={project.icon} alt={`${project.name} icon`} width={160} height={160} className="project-icon" />
-      </div>
+      <a className="project-icon-link" href={project.href} aria-label={`${project.name}: открыть сайт`}>
+        <div className="project-icon-wrap">
+          <Image src={project.icon} alt={`${project.name} icon`} width={160} height={160} className="project-icon" />
+        </div>
+      </a>
       <div className="project-card-body">
         <h3>{project.name}</h3>
         <p>{project.description}</p>
@@ -74,9 +68,9 @@ function ProjectCard({ project }: { project: Project }) {
           <div className="tag-list">
             {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
           </div>
-          <Link className="card-arrow" href={project.href} {...linkProps} aria-label={`${project.action}: ${project.name}`}>
+          <a className="card-arrow" href={project.href} aria-label={`${project.name}: открыть сайт`}>
             <ArrowIcon />
-          </Link>
+          </a>
         </div>
       </div>
     </article>
@@ -86,25 +80,29 @@ function ProjectCard({ project }: { project: Project }) {
 export default function HomePage() {
   return (
     <main id="top">
+      <header className="site-header site-header-dark">
+        <div className="container nav-wrap">
+          <Link className="brand" href="/" aria-label="На главную">
+            <span className="brand-mark">i</span>
+            <span className="brand-name">iglakovmaks</span>
+          </Link>
+          <a className="telegram-button" href="https://t.me/iglmai" target="_blank" rel="noreferrer">
+            <span className="telegram-mark">↗</span> Telegram
+          </a>
+          <details className="menu-details">
+            <summary className="menu-toggle" aria-label="Открыть меню">
+              <span /><span />
+            </summary>
+            <div className="menu-popover">
+              <a href="#works">Мои приложения</a>
+              <a href="https://t.me/iglmai" target="_blank" rel="noreferrer">Telegram <span>↗</span></a>
+            </div>
+          </details>
+        </div>
+      </header>
+
       <section className="hero">
         <div className="hero-grid-lines" aria-hidden="true" />
-        <header className="site-header site-header-dark">
-          <div className="container nav-wrap">
-            <Link className="brand" href="/" aria-label="На главную">
-              <span className="brand-mark">i</span>
-              <span className="brand-name">iglakovmaks</span>
-            </Link>
-            <nav className="main-nav" aria-label="Основная навигация">
-              <a href="#works">Проекты</a>
-              <a href="#about">Обо мне</a>
-              <a href="#contact">Контакты</a>
-            </nav>
-            <a className="nav-status" href="mailto:hello@iglakov.ru">
-              <span className="status-dot" /> На связи
-            </a>
-          </div>
-        </header>
-
         <div className="container hero-content">
           <div className="hero-kicker"><span className="blue-dot" /> Independent developer <span>—</span> 2026</div>
           <h1>iglakovmaks</h1>
@@ -116,23 +114,22 @@ export default function HomePage() {
             <div className="stage-cross stage-cross-one" aria-hidden="true">+</div>
             <div className="stage-cross stage-cross-two" aria-hidden="true">+</div>
 
-            <a className="floating-app floating-app-left" href="https://iglakovmaks.github.io/chess_helper_site/" target="_blank" rel="noreferrer">
+            <a className="floating-app floating-app-left" href="/ChessHelper/">
               <div className="floating-app-icon"><Image src="/assets/ChessHelpericon.png" alt="" width={76} height={76} /></div>
               <div><strong>ChessHelper</strong><span>Chess companion</span></div>
             </a>
-            <a className="floating-app floating-app-right" href="https://iglakovmaks.github.io/EngDeck/" target="_blank" rel="noreferrer">
+            <a className="floating-app floating-app-right" href="/EngDeck/">
               <div className="floating-app-icon"><Image src="/assets/EngDeckicon.png" alt="" width={76} height={76} /></div>
               <div><strong>EngDeck</strong><span>Language learning</span></div>
             </a>
-            <Link className="floating-app floating-app-bottom" href="/SwitchLang">
+            <a className="floating-app floating-app-bottom" href="/SwitchLang/">
               <div className="floating-app-icon"><Image src="/assets/switchlangicon.png" alt="" width={76} height={76} /></div>
               <div><strong>SwitchLang</strong><span>macOS utility</span></div>
-            </Link>
+            </a>
 
             <div className="portrait-wrap">
               <div className="portrait-halo" aria-hidden="true" />
               <Image className="portrait-image" src="/assets/avae.png" alt="Аватарка iglakovmaks" fill priority sizes="(max-width: 700px) 72vw, 430px" />
-              <div className="portrait-label">MADE WITH CURIOSITY <span>↗</span></div>
             </div>
           </div>
 
@@ -147,17 +144,18 @@ export default function HomePage() {
       <div className="project-strip" aria-label="Список приложений">
         <div className="project-strip-track">
           <span>CHESSHELPER <b>✦</b> SWITCHLANG <b>✦</b> ENGDECK <b>✦</b> CHESSHELPER <b>✦</b> SWITCHLANG <b>✦</b> ENGDECK <b>✦</b></span>
+          <span aria-hidden="true">CHESSHELPER <b>✦</b> SWITCHLANG <b>✦</b> ENGDECK <b>✦</b> CHESSHELPER <b>✦</b> SWITCHLANG <b>✦</b> ENGDECK <b>✦</b></span>
         </div>
       </div>
 
       <section className="catalog-section section" id="works">
         <div className="container">
-          <div className="section-topline">
-            <div className="section-index">01 <span>/</span> WORKS</div>
+          <div className="section-topline section-topline-dark">
+            <div className="section-index section-index-light">01 <span>/</span> WORKS</div>
             <p>Приложения, которые я создаю<br />из любопытства и практической пользы.</p>
           </div>
           <div className="catalog-heading">
-            <h2>Каталог<br /><span>приложений.</span></h2>
+            <h2>Мои<br /><span>приложения.</span></h2>
             <p className="catalog-heading-note">Каждый проект — отдельный мир<br />со своим характером.</p>
           </div>
           <div className="catalog-grid">
@@ -172,31 +170,6 @@ export default function HomePage() {
               </div>
             </article>
           </div>
-        </div>
-      </section>
-
-      <section className="about-section section" id="about">
-        <div className="container about-layout">
-          <div className="section-index">02 <span>/</span> ABOUT</div>
-          <div className="about-copy">
-            <h2>Убираю лишнее,<br /><span>оставляю главное.</span></h2>
-            <p>Я создаю небольшие цифровые продукты с большим вниманием к деталям. Мне нравится, когда технология не просит внимания, а просто делает день немного легче.</p>
-            <div className="about-facts">
-              <div><strong>03</strong><span>apps in<br />the archive</span></div>
-              <div><strong>∞</strong><span>ideas in<br />progress</span></div>
-              <div><strong>RU</strong><span>made with<br />attention</span></div>
-            </div>
-          </div>
-          <div className="about-side-note">Designing the<br /><span>next useful thing.</span></div>
-        </div>
-      </section>
-
-      <section className="contact-section" id="contact">
-        <div className="contact-grid-mark" aria-hidden="true" />
-        <div className="container contact-inner">
-          <div className="section-index section-index-light">03 <span>/</span> CONTACT</div>
-          <h2>Have an idea?<br /><span>Let&apos;s make it real.</span></h2>
-          <a className="contact-email" href="mailto:hello@iglakov.ru">hello@iglakov.ru <ArrowIcon /></a>
         </div>
       </section>
 
