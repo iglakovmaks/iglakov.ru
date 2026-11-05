@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 type Project = {
   number: string;
@@ -83,42 +86,38 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export default function HomePage() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => {
+      document.removeEventListener('keydown', closeOnEscape);
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <main id="top">
-      <header className="site-header site-header-dark">
+      <header className={`site-header site-header-dark${menuOpen ? ' is-open' : ''}`}>
         <div className="container nav-wrap">
-          <Link className="brand" href="/" aria-label="На главную">
-            <span className="brand-mark">i</span>
+          <Link className="brand" href="/" aria-label="На главную" onClick={closeMenu}>
             <span className="brand-name">iglakovmaks</span>
           </Link>
-          <details className="menu-details">
-            <summary className="menu-toggle" aria-label="Открыть меню">
-              <span className="menu-label">Menu</span>
-              <span /><span />
-            </summary>
-            <div className="menu-popover">
-              <div className="menu-popover-top">
-                <span>Navigation</span>
-                <span>iglakovmaks</span>
-              </div>
-              <nav className="menu-links" aria-label="Меню сайта">
-                <a href="#works">My apps <span>01</span></a>
-                <a href="https://t.me/iglmai" target="_blank" rel="noreferrer">Telegram <span>↗</span></a>
-                <a href="mailto:hello@iglakov.ru?subject=Application%20development">Order application development <span>↗</span></a>
-                <a href="mailto:hello@iglakov.ru">Email <span>↗</span></a>
-                <a href="https://github.com/iglakovmaks" target="_blank" rel="noreferrer">GitHub <span>↗</span></a>
-              </nav>
-              <div className="menu-popover-bottom">Available for selected collaborations <span>2026</span></div>
-            </div>
-          </details>
+          <button className={`menu-toggle${menuOpen ? ' is-open' : ''}`} type="button" aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
+            <span /><span />
+          </button>
         </div>
       </header>
 
       <section className="hero">
         <div className="hero-grid-lines" aria-hidden="true" />
         <div className="container hero-content">
-          <h1>iglakovmaks</h1>
-
           <div className="hero-stage">
             <div className="stage-ring stage-ring-one" aria-hidden="true" />
             <div className="stage-ring stage-ring-two" aria-hidden="true" />
@@ -127,6 +126,7 @@ export default function HomePage() {
             <div className="pixel-field" aria-hidden="true">
               {Array.from({ length: 16 }, (_, index) => <span className={`pixel pixel-${index + 1}`} key={index} />)}
             </div>
+            <h1 className="hero-wordmark">iglakovmaks</h1>
 
             <a className="floating-app floating-app-left" href="/ChessHelper/">
               <div className="floating-app-icon"><Image src="/assets/ChessHelpericon.png" alt="" width={76} height={76} /></div>
@@ -143,7 +143,7 @@ export default function HomePage() {
 
             <div className="portrait-wrap">
               <div className="portrait-halo" aria-hidden="true" />
-              <Image className="portrait-image" src="/assets/avae.png" alt="Аватарка iglakovmaks" fill priority sizes="(max-width: 700px) 72vw, 430px" />
+              <Image className="portrait-image" src="/assets/avatar.png" alt="Аватарка iglakovmaks" fill priority sizes="(max-width: 700px) 82vw, 570px" />
             </div>
           </div>
 
@@ -162,10 +162,30 @@ export default function HomePage() {
         </div>
       </div>
 
+      {menuOpen && (
+        <div className="menu-overlay" role="dialog" aria-modal="true" aria-label="Навигационное меню">
+          <button className="menu-overlay-dismiss" type="button" aria-label="Закрыть меню" onClick={closeMenu} />
+          <div className="menu-overlay-inner">
+            <div className="menu-popover-top">
+              <span>Navigation</span>
+              <span>iglakovmaks</span>
+            </div>
+            <nav className="menu-links" aria-label="Меню сайта">
+              <a href="#works" onClick={closeMenu}>My apps <span>01</span></a>
+              <a href="https://t.me/iglmai" target="_blank" rel="noreferrer" onClick={closeMenu}>Telegram <span>↗</span></a>
+              <a href="mailto:hello@iglakov.ru?subject=Application%20development" onClick={closeMenu}>Order application development <span>↗</span></a>
+              <a href="mailto:hello@iglakov.ru" onClick={closeMenu}>Email <span>↗</span></a>
+              <a href="https://github.com/iglakovmaks" target="_blank" rel="noreferrer" onClick={closeMenu}>GitHub <span>↗</span></a>
+            </nav>
+            <div className="menu-popover-bottom">Available for selected collaborations <span>2026</span></div>
+          </div>
+        </div>
+      )}
+
       <section className="catalog-section section" id="works">
         <div className="container">
           <div className="catalog-heading">
-            <h2>My<br /><span>apps.</span></h2>
+            <h2>My <span>apps.</span></h2>
             <p className="catalog-heading-note">Selected products<br />by iglakovmaks.</p>
           </div>
           <div className="catalog-grid">
