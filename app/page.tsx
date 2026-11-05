@@ -143,7 +143,7 @@ export default function HomePage() {
 
             <div className="portrait-wrap">
               <div className="portrait-halo" aria-hidden="true" />
-              <Image className="portrait-image" src="/assets/avatar.png" alt="Аватарка iglakovmaks" fill priority sizes="(max-width: 700px) 82vw, 570px" />
+              <Image className="portrait-image" src="/assets/avae.png" alt="Аватарка iglakovmaks" fill priority sizes="(max-width: 700px) 76vw, 440px" />
             </div>
           </div>
 
@@ -166,18 +166,13 @@ export default function HomePage() {
         <div className="menu-overlay" role="dialog" aria-modal="true" aria-label="Навигационное меню">
           <button className="menu-overlay-dismiss" type="button" aria-label="Закрыть меню" onClick={closeMenu} />
           <div className="menu-overlay-inner">
-            <div className="menu-popover-top">
-              <span>Navigation</span>
-              <span>iglakovmaks</span>
-            </div>
             <nav className="menu-links" aria-label="Меню сайта">
               <a href="#works" onClick={closeMenu}>My apps <span>01</span></a>
               <a href="https://t.me/iglmai" target="_blank" rel="noreferrer" onClick={closeMenu}>Telegram <span>↗</span></a>
-              <a href="mailto:hello@iglakov.ru?subject=Application%20development" onClick={closeMenu}>Order application development <span>↗</span></a>
-              <a href="mailto:hello@iglakov.ru" onClick={closeMenu}>Email <span>↗</span></a>
+              <a href="mailto:iglakov2008@gmail.com?subject=Application%20development" onClick={closeMenu}>Order application development <span>↗</span></a>
+              <a href="mailto:iglakov2008@gmail.com" onClick={closeMenu}>Email <span>↗</span></a>
               <a href="https://github.com/iglakovmaks" target="_blank" rel="noreferrer" onClick={closeMenu}>GitHub <span>↗</span></a>
             </nav>
-            <div className="menu-popover-bottom">Available for selected collaborations <span>2026</span></div>
           </div>
         </div>
       )}
