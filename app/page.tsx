@@ -4,40 +4,40 @@ import Link from 'next/link';
 type Project = {
   number: string;
   name: string;
-  kind: string;
   description: string;
   icon: string;
   href: string;
   tags: string[];
+  platforms: ('macOS' | 'Windows')[];
 };
 
 const projects: Project[] = [
   {
     number: '01',
     name: 'SwitchLang',
-    kind: 'macOS utility',
     description: 'Переключение языка ввода в одно движение. Маленький инструмент для большого потока.',
     icon: '/assets/switchlangicon.png',
     href: '/SwitchLang/',
-    tags: ['Swift', 'macOS'],
+    tags: ['Swift', 'Utility'],
+    platforms: ['macOS', 'Windows'],
   },
   {
     number: '02',
     name: 'EngDeck',
-    kind: 'Language learning',
     description: 'Карточки и быстрые повторения для тех, кто хочет сделать английский ежедневной привычкой.',
     icon: '/assets/EngDeckicon.png',
     href: '/EngDeck/',
     tags: ['Swift', 'Education'],
+    platforms: ['macOS'],
   },
   {
     number: '03',
     name: 'ChessHelper',
-    kind: 'Chess companion',
     description: 'Спокойный помощник для разбора шахматных позиций, партий и следующих сильных ходов.',
     icon: '/assets/ChessHelpericon.png',
     href: '/ChessHelper/',
     tags: ['Python', 'Chess'],
+    platforms: ['macOS', 'Windows'],
   },
 ];
 
@@ -51,16 +51,21 @@ function ArrowIcon() {
 
 function ProjectCard({ project }: { project: Project }) {
   return (
-    <article className="project-card">
+    <a className="project-card" href={project.href} aria-label={`${project.name}: открыть сайт`}>
       <div className="project-card-top">
         <span className="project-number">{project.number}</span>
-        <span className="project-kind">{project.kind}</span>
-      </div>
-      <a className="project-icon-link" href={project.href} aria-label={`${project.name}: открыть сайт`}>
-        <div className="project-icon-wrap">
-          <Image src={project.icon} alt={`${project.name} icon`} width={160} height={160} className="project-icon" />
+        <div className="platform-list" aria-label={`Платформы: ${project.platforms.join(', ')}`}>
+          {project.platforms.map((platform) => (
+            <span className="platform-pill" key={platform}>
+              <span className="platform-symbol" aria-hidden="true">{platform === 'macOS' ? '⌘' : '⊞'}</span>
+              {platform}
+            </span>
+          ))}
         </div>
-      </a>
+      </div>
+      <div className="project-icon-wrap">
+        <Image src={project.icon} alt={`${project.name} icon`} width={160} height={160} className="project-icon" />
+      </div>
       <div className="project-card-body">
         <h3>{project.name}</h3>
         <p>{project.description}</p>
@@ -68,12 +73,12 @@ function ProjectCard({ project }: { project: Project }) {
           <div className="tag-list">
             {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
           </div>
-          <a className="card-arrow" href={project.href} aria-label={`${project.name}: открыть сайт`}>
+          <span className="card-arrow" aria-hidden="true">
             <ArrowIcon />
-          </a>
+          </span>
         </div>
       </div>
-    </article>
+    </a>
   );
 }
 
@@ -86,16 +91,24 @@ export default function HomePage() {
             <span className="brand-mark">i</span>
             <span className="brand-name">iglakovmaks</span>
           </Link>
-          <a className="telegram-button" href="https://t.me/iglmai" target="_blank" rel="noreferrer">
-            <span className="telegram-mark">↗</span> Telegram
-          </a>
           <details className="menu-details">
             <summary className="menu-toggle" aria-label="Открыть меню">
+              <span className="menu-label">Menu</span>
               <span /><span />
             </summary>
             <div className="menu-popover">
-              <a href="#works">Мои приложения</a>
-              <a href="https://t.me/iglmai" target="_blank" rel="noreferrer">Telegram <span>↗</span></a>
+              <div className="menu-popover-top">
+                <span>Navigation</span>
+                <span>iglakovmaks</span>
+              </div>
+              <nav className="menu-links" aria-label="Меню сайта">
+                <a href="#works">My apps <span>01</span></a>
+                <a href="https://t.me/iglmai" target="_blank" rel="noreferrer">Telegram <span>↗</span></a>
+                <a href="mailto:hello@iglakov.ru?subject=Application%20development">Order application development <span>↗</span></a>
+                <a href="mailto:hello@iglakov.ru">Email <span>↗</span></a>
+                <a href="https://github.com/iglakovmaks" target="_blank" rel="noreferrer">GitHub <span>↗</span></a>
+              </nav>
+              <div className="menu-popover-bottom">Available for selected collaborations <span>2026</span></div>
             </div>
           </details>
         </div>
@@ -104,15 +117,16 @@ export default function HomePage() {
       <section className="hero">
         <div className="hero-grid-lines" aria-hidden="true" />
         <div className="container hero-content">
-          <div className="hero-kicker"><span className="blue-dot" /> Independent developer <span>—</span> 2026</div>
           <h1>iglakovmaks</h1>
-          <p className="hero-subtitle">Digital products, quiet interfaces<br />and useful little ideas.</p>
 
           <div className="hero-stage">
             <div className="stage-ring stage-ring-one" aria-hidden="true" />
             <div className="stage-ring stage-ring-two" aria-hidden="true" />
             <div className="stage-cross stage-cross-one" aria-hidden="true">+</div>
             <div className="stage-cross stage-cross-two" aria-hidden="true">+</div>
+            <div className="pixel-field" aria-hidden="true">
+              {Array.from({ length: 16 }, (_, index) => <span className={`pixel pixel-${index + 1}`} key={index} />)}
+            </div>
 
             <a className="floating-app floating-app-left" href="/ChessHelper/">
               <div className="floating-app-icon"><Image src="/assets/ChessHelpericon.png" alt="" width={76} height={76} /></div>
@@ -124,7 +138,7 @@ export default function HomePage() {
             </a>
             <a className="floating-app floating-app-bottom" href="/SwitchLang/">
               <div className="floating-app-icon"><Image src="/assets/switchlangicon.png" alt="" width={76} height={76} /></div>
-              <div><strong>SwitchLang</strong><span>macOS utility</span></div>
+              <div><strong>SwitchLang</strong><span>Input utility</span></div>
             </a>
 
             <div className="portrait-wrap">
@@ -150,13 +164,9 @@ export default function HomePage() {
 
       <section className="catalog-section section" id="works">
         <div className="container">
-          <div className="section-topline section-topline-dark">
-            <div className="section-index section-index-light">01 <span>/</span> WORKS</div>
-            <p>Приложения, которые я создаю<br />из любопытства и практической пользы.</p>
-          </div>
           <div className="catalog-heading">
-            <h2>Мои<br /><span>приложения.</span></h2>
-            <p className="catalog-heading-note">Каждый проект — отдельный мир<br />со своим характером.</p>
+            <h2>My<br /><span>apps.</span></h2>
+            <p className="catalog-heading-note">Selected products<br />by iglakovmaks.</p>
           </div>
           <div className="catalog-grid">
             {projects.map((project) => <ProjectCard key={project.name} project={project} />)}
