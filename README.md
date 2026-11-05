@@ -1,3 +1,3 @@
 # iglakov.ru
 
-Это мой сайт-портфолио.
+This is my portfolio website.
