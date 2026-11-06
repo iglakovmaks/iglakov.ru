@@ -149,7 +149,6 @@ export default function HomePage() {
 
           <div className="hero-footnote">
             <span>01 — 03</span>
-            <span>Scroll to explore</span>
             <span className="scroll-arrow">↓</span>
           </div>
         </div>
