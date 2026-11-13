@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { MobileMenu } from './mobile-menu';
 
 const projects = [
   {
@@ -33,6 +34,14 @@ const projects = [
 const email = 'iglakov2008@gmail.com';
 const telegram = 'https://t.me/iglmai';
 const github = 'https://github.com/iglakovmaks';
+const sectionLinks = [
+  { href: '#works', label: 'Projects' },
+  { href: '#contact', label: 'Contact' },
+];
+const socialLinks = [
+  { href: github, label: 'GitHub' },
+  { href: telegram, label: 'Telegram' },
+];
 
 function ProjectCard({ project }: { project: (typeof projects)[number] }) {
   const titleId = `project-${project.theme}`;
@@ -66,19 +75,31 @@ export default function HomePage() {
           iglakov.ru
         </a>
         <nav className="main-nav" aria-label="Main navigation">
-          <a href="#works">Projects</a>
-          <a href="#contact">Contact</a>
+          {sectionLinks.map(({ href, label }) => <a href={href} key={href}>{label}</a>)}
         </nav>
-        <a className="header-github" href={github} target="_blank" rel="noreferrer">
-          GitHub <span aria-hidden="true">↗</span>
-        </a>
+        <div className="header-socials">
+          {socialLinks.map(({ href, label }) => (
+            <a href={href} key={href} target="_blank" rel="noreferrer">
+              {label} <span aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </div>
+        <MobileMenu>
+          {sectionLinks.map(({ href, label }) => (
+            <a href={href} key={href}>{label} <span aria-hidden="true">↓</span></a>
+          ))}
+          {socialLinks.map(({ href, label }) => (
+            <a href={href} key={href} target="_blank" rel="noreferrer">
+              {label} <span aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </MobileMenu>
       </header>
 
       <main>
         <section className="hero" aria-labelledby="hero-name">
           <h1 className="wordmark" id="hero-name">
             <span className="wordmark-base">iglakovmaks</span>
-            <span className="wordmark-soft" aria-hidden="true">iglakovmaks</span>
             <span className="wordmark-blur" aria-hidden="true">iglakovmaks</span>
           </h1>
           <div className="hero-content inset">
@@ -90,14 +111,28 @@ export default function HomePage() {
               </a>
             </div>
 
-            <Image
-              src="/assets/portrait.webp"
-              alt="The iglakovmaks avatar behind a laptop"
-              width={600}
-              height={827}
-              loading="eager"
-              className="portrait"
-            />
+            <div className="portrait-stage">
+              <Image
+                src="/assets/portrait.webp"
+                alt="The iglakovmaks avatar behind a laptop"
+                width={600}
+                height={827}
+                loading="eager"
+                className="portrait"
+              />
+              <div className="floating-apps" aria-hidden="true">
+                {projects.map((project) => (
+                  <Image
+                    key={project.name}
+                    className={`floating-app floating-app--${project.theme}`}
+                    src={project.icon}
+                    alt=""
+                    width={88}
+                    height={88}
+                  />
+                ))}
+              </div>
+            </div>
 
             <nav className="hero-index" aria-label="Project shortcuts">
               <p className="eyebrow">My apps</p>
