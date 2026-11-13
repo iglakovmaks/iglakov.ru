@@ -7,21 +7,20 @@ export const metadata: Metadata = {
     default: 'iglakovmaks — digital products',
     template: '%s — iglakovmaks',
   },
-  description:
-    'Портфолио iglakovmaks: приложения, интерфейсы и цифровые продукты.',
+  description: 'The portfolio of iglakovmaks, an independent developer building apps for macOS and Windows.',
   openGraph: {
     title: 'iglakovmaks — digital products',
-    description: 'Коллекция приложений, идей и цифровых продуктов.',
+    description: 'Apps, ideas, and digital products by iglakovmaks.',
     url: 'https://iglakov.ru',
     siteName: 'iglakovmaks',
-    locale: 'ru_RU',
+    locale: 'en_US',
     type: 'website',
   },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ru">
+    <html lang="en">
       <body>{children}</body>
     </html>
   );

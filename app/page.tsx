@@ -1,209 +1,150 @@
-'use client';
-
 import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
-type Project = {
-  number: string;
-  name: string;
-  description: string;
-  icon: string;
-  href: string;
-  tags: string[];
-  platforms: ('macOS' | 'Windows')[];
-};
-
-const projects: Project[] = [
+const projects = [
   {
-    number: '01',
     name: 'SwitchLang',
-    description: 'Переключение языка ввода в одно движение. Маленький инструмент для большого потока.',
+    description: 'Fix text typed in the wrong keyboard layout with a single shortcut.',
     icon: '/assets/switchlangicon.png',
     href: '/SwitchLang/',
-    tags: ['Swift', 'Utility'],
-    platforms: ['macOS', 'Windows'],
+    theme: 'switchlang',
+    stack: 'Swift',
+    platforms: 'macOS · Windows',
   },
   {
-    number: '02',
     name: 'EngDeck',
-    description: 'Карточки и быстрые повторения для тех, кто хочет сделать английский ежедневной привычкой.',
+    description: 'Flashcards and quick reviews to make learning English a daily habit.',
     icon: '/assets/EngDeckicon.png',
     href: '/EngDeck/',
-    tags: ['Swift', 'Education'],
-    platforms: ['macOS'],
+    theme: 'engdeck',
+    stack: 'Swift',
+    platforms: 'macOS',
   },
   {
-    number: '03',
     name: 'ChessHelper',
-    description: 'Спокойный помощник для разбора шахматных позиций, партий и следующих сильных ходов.',
+    description: 'Analyze chess positions, review games, and find stronger moves.',
     icon: '/assets/ChessHelpericon.png',
     href: '/ChessHelper/',
-    tags: ['Python', 'Chess'],
-    platforms: ['macOS', 'Windows'],
+    theme: 'chesshelper',
+    stack: 'Python',
+    platforms: 'macOS · Windows',
   },
 ];
 
-function ArrowIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 18 18" fill="none">
-      <path d="M3 9h11M9.5 3.5 15 9l-5.5 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
+const email = 'iglakov2008@gmail.com';
+const telegram = 'https://t.me/iglmai';
+const github = 'https://github.com/iglakovmaks';
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({ project }: { project: (typeof projects)[number] }) {
+  const titleId = `project-${project.theme}`;
+
   return (
-    <a className="project-card" href={project.href} aria-label={`${project.name}: открыть сайт`}>
-      <div className="project-card-top">
-        <span className="project-number">{project.number}</span>
-        <div className="platform-list" aria-label={`Платформы: ${project.platforms.join(', ')}`}>
-          {project.platforms.map((platform) => (
-            <span className="platform-pill" key={platform}>
-              <span className="platform-symbol" aria-hidden="true">{platform === 'macOS' ? '⌘' : '⊞'}</span>
-              {platform}
-            </span>
-          ))}
+    <li>
+      <a className="project-card" href={project.href} aria-labelledby={titleId}>
+        <div className={`project-art project-art--${project.theme}`}>
+          <Image className="project-icon" src={project.icon} alt="" width={176} height={176} />
         </div>
-      </div>
-      <div className="project-icon-wrap">
-        <Image src={project.icon} alt={`${project.name} icon`} width={160} height={160} className="project-icon" />
-      </div>
-      <div className="project-card-body">
-        <h3>{project.name}</h3>
+        <div className="project-meta">
+          <span>{project.platforms}</span>
+          <span>{project.stack}</span>
+        </div>
+        <div className="project-title">
+          <h3 id={titleId}>{project.name}</h3>
+          <span className="project-arrow" aria-hidden="true">↗</span>
+        </div>
         <p>{project.description}</p>
-        <div className="project-card-bottom">
-          <div className="tag-list">
-            {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
-          </div>
-          <span className="card-arrow" aria-hidden="true">
-            <ArrowIcon />
-          </span>
-        </div>
-      </div>
-    </a>
+      </a>
+    </li>
   );
 }
 
 export default function HomePage() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMenuOpen(false);
-    };
-    document.addEventListener('keydown', closeOnEscape);
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => {
-      document.removeEventListener('keydown', closeOnEscape);
-      document.body.style.overflow = '';
-    };
-  }, [menuOpen]);
-
-  const closeMenu = () => setMenuOpen(false);
-
   return (
-    <main id="top">
-      <header className={`site-header site-header-dark${menuOpen ? ' is-open' : ''}`}>
-        <div className="container nav-wrap">
-          <Link className="brand" href="/" aria-label="На главную" onClick={closeMenu}>
-            <span className="brand-name">iglakovmaks</span>
-          </Link>
-          <button className={`menu-toggle${menuOpen ? ' is-open' : ''}`} type="button" aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
-            <span /><span />
-          </button>
-        </div>
+    <div className="sheet" id="top">
+      <header className="site-header inset">
+        <a className="brand" href="#top" aria-label="iglakov.ru, back to top">
+          <span className="brand-mark" aria-hidden="true" />
+          iglakov.ru
+        </a>
+        <nav className="main-nav" aria-label="Main navigation">
+          <a href="#works">Projects</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <a className="header-github" href={github} target="_blank" rel="noreferrer">
+          GitHub <span aria-hidden="true">↗</span>
+        </a>
       </header>
 
-      <section className="hero">
-        <div className="hero-grid-lines" aria-hidden="true" />
-        <div className="container hero-content">
-          <div className="hero-stage">
-            <div className="stage-ring stage-ring-one" aria-hidden="true" />
-            <div className="stage-ring stage-ring-two" aria-hidden="true" />
-            <div className="stage-cross stage-cross-one" aria-hidden="true">+</div>
-            <div className="stage-cross stage-cross-two" aria-hidden="true">+</div>
-            <div className="pixel-field" aria-hidden="true">
-              {Array.from({ length: 16 }, (_, index) => <span className={`pixel pixel-${index + 1}`} key={index} />)}
+      <main>
+        <section className="hero" aria-labelledby="hero-name">
+          <h1 className="wordmark" id="hero-name">
+            <span className="wordmark-base">iglakovmaks</span>
+            <span className="wordmark-soft" aria-hidden="true">iglakovmaks</span>
+            <span className="wordmark-blur" aria-hidden="true">iglakovmaks</span>
+          </h1>
+          <div className="hero-content inset">
+            <div className="hero-intro">
+              <p className="eyebrow">Independent developer</p>
+              <p className="hero-description">I build apps for everyday tasks.</p>
+              <a className="text-link" href="#works">
+                Explore projects <span aria-hidden="true">↓</span>
+              </a>
             </div>
-            <h1 className="hero-wordmark">iglakovmaks</h1>
 
-            <a className="floating-app floating-app-left" href="/ChessHelper/">
-              <div className="floating-app-icon"><Image src="/assets/ChessHelpericon.png" alt="" width={76} height={76} /></div>
-              <div><strong>ChessHelper</strong><span>Chess companion</span></div>
-            </a>
-            <a className="floating-app floating-app-right" href="/EngDeck/">
-              <div className="floating-app-icon"><Image src="/assets/EngDeckicon.png" alt="" width={76} height={76} /></div>
-              <div><strong>EngDeck</strong><span>Language learning</span></div>
-            </a>
-            <a className="floating-app floating-app-bottom" href="/SwitchLang/">
-              <div className="floating-app-icon"><Image src="/assets/switchlangicon.png" alt="" width={76} height={76} /></div>
-              <div><strong>SwitchLang</strong><span>Input utility</span></div>
-            </a>
+            <Image
+              src="/assets/portrait.webp"
+              alt="The iglakovmaks avatar behind a laptop"
+              width={600}
+              height={827}
+              loading="eager"
+              className="portrait"
+            />
 
-            <div className="portrait-wrap">
-              <div className="portrait-halo" aria-hidden="true" />
-              <Image className="portrait-image" src="/assets/avae.png" alt="Аватарка iglakovmaks" fill priority sizes="(max-width: 700px) 76vw, 440px" />
-            </div>
-          </div>
-
-          <div className="hero-footnote">
-            <span>01 — 03</span>
-            <span className="scroll-arrow">↓</span>
-          </div>
-        </div>
-      </section>
-
-      <div className="project-strip" aria-label="Список приложений">
-        <div className="project-strip-track">
-          <span>CHESSHELPER <b>✦</b> SWITCHLANG <b>✦</b> ENGDECK <b>✦</b> CHESSHELPER <b>✦</b> SWITCHLANG <b>✦</b> ENGDECK <b>✦</b></span>
-          <span aria-hidden="true">CHESSHELPER <b>✦</b> SWITCHLANG <b>✦</b> ENGDECK <b>✦</b> CHESSHELPER <b>✦</b> SWITCHLANG <b>✦</b> ENGDECK <b>✦</b></span>
-        </div>
-      </div>
-
-      {menuOpen && (
-        <div className="menu-overlay" role="dialog" aria-modal="true" aria-label="Навигационное меню">
-          <button className="menu-overlay-dismiss" type="button" aria-label="Закрыть меню" onClick={closeMenu} />
-          <div className="menu-overlay-inner">
-            <nav className="menu-links" aria-label="Меню сайта">
-              <a href="#works" onClick={closeMenu}>My apps <span>01</span></a>
-              <a href="https://t.me/iglmai" target="_blank" rel="noreferrer" onClick={closeMenu}>Telegram <span>↗</span></a>
-              <a href="mailto:iglakov2008@gmail.com?subject=Application%20development" onClick={closeMenu}>Order application development <span>↗</span></a>
-              <a href="mailto:iglakov2008@gmail.com" onClick={closeMenu}>Email <span>↗</span></a>
-              <a href="https://github.com/iglakovmaks" target="_blank" rel="noreferrer" onClick={closeMenu}>GitHub <span>↗</span></a>
+            <nav className="hero-index" aria-label="Project shortcuts">
+              <p className="eyebrow">My apps</p>
+              <ul>
+                {projects.map((project) => (
+                  <li key={project.name}>
+                    <a href={project.href}>
+                      {project.name} <span aria-hidden="true">↗</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </nav>
           </div>
-        </div>
-      )}
+        </section>
 
-      <section className="catalog-section section" id="works">
-        <div className="container">
-          <div className="catalog-heading">
-            <h2>My <span>apps.</span></h2>
-            <p className="catalog-heading-note">Selected products<br />by iglakovmaks.</p>
+        <section className="works inset" id="works" aria-labelledby="works-title">
+          <div className="works-heading">
+            <h2 id="works-title">Selected apps<span aria-hidden="true">.</span></h2>
+            <p>For macOS and Windows</p>
           </div>
-          <div className="catalog-grid">
+          <ul className="project-grid">
             {projects.map((project) => <ProjectCard key={project.name} project={project} />)}
-            <article className="project-card project-card-coming">
-              <div className="coming-symbol">+</div>
-              <div className="project-card-body">
-                <div className="project-number">04 / SOON</div>
-                <h3>More to come</h3>
-                <p>Новые эксперименты уже собираются в заметках и прототипах.</p>
-                <span className="coming-line">THE ARCHIVE IS OPEN</span>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
+          </ul>
+        </section>
+      </main>
 
-      <footer className="site-footer">
-        <div className="container footer-inner">
+      <footer className="site-footer" id="contact">
+        <div className="contact inset">
+          <div className="contact-intro">
+            <h2>Let’s talk.</h2>
+            <p>Get in touch about app development or collaborations.</p>
+            <a className="contact-button" href={`mailto:${email}?subject=Application%20development`}>
+              Tell me about your project <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <ul className="contact-links">
+            <li><a href={telegram} target="_blank" rel="noreferrer">Telegram <span aria-hidden="true">↗</span></a></li>
+            <li><a href={github} target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a></li>
+            <li><a href={`mailto:${email}`}>{email} <span aria-hidden="true">↗</span></a></li>
+          </ul>
+        </div>
+        <div className="footer-bar inset">
           <span>© 2026 iglakovmaks</span>
-          <span className="footer-center">Built with curiosity</span>
-          <a href="#top">Back to top ↑</a>
+          <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
         </div>
       </footer>
-    </main>
+    </div>
   );
 }

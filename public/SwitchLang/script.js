@@ -13,14 +13,14 @@
   menuToggle?.addEventListener('click', () => {
     const isOpen = mobileMenu?.classList.toggle('is-open') ?? false;
     menuToggle.setAttribute('aria-expanded', String(isOpen));
-    menuToggle.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
+    menuToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
   });
 
   mobileMenu?.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
       mobileMenu.classList.remove('is-open');
       menuToggle?.setAttribute('aria-expanded', 'false');
-      menuToggle?.setAttribute('aria-label', 'Открыть меню');
+      menuToggle?.setAttribute('aria-label', 'Open menu');
     });
   });
 
