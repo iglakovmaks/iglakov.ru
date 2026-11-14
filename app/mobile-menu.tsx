@@ -33,10 +33,14 @@ export function MobileMenu({ children }: { children: ReactNode }) {
       onKeyDown={(event) => {
         if (event.key === 'Escape') closeMenu();
       }}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) event.currentTarget.open = false;
+      }}
     >
-      <summary ref={toggleRef}>
-        Menu <span className="menu-icon" aria-hidden="true" />
+      <summary ref={toggleRef} aria-label="Navigation menu">
+        <span className="menu-icon" aria-hidden="true" />
       </summary>
+      <div className="mobile-menu-backdrop" aria-hidden="true" onClick={closeMenu} />
       <nav
         className="mobile-menu-panel"
         aria-label="Main navigation"

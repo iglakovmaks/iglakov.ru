@@ -98,10 +98,7 @@ export default function HomePage() {
 
       <main>
         <section className="hero" aria-labelledby="hero-name">
-          <h1 className="wordmark" id="hero-name">
-            <span className="wordmark-base">iglakovmaks</span>
-            <span className="wordmark-blur" aria-hidden="true">iglakovmaks</span>
-          </h1>
+          <h1 className="wordmark" id="hero-name">iglakovmaks</h1>
           <div className="hero-content inset">
             <div className="hero-intro">
               <p className="eyebrow">Independent developer</p>
@@ -111,28 +108,14 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="portrait-stage">
-              <Image
-                src="/assets/portrait.webp"
-                alt="The iglakovmaks avatar behind a laptop"
-                width={600}
-                height={827}
-                loading="eager"
-                className="portrait"
-              />
-              <div className="floating-apps" aria-hidden="true">
-                {projects.map((project) => (
-                  <Image
-                    key={project.name}
-                    className={`floating-app floating-app--${project.theme}`}
-                    src={project.icon}
-                    alt=""
-                    width={88}
-                    height={88}
-                  />
-                ))}
-              </div>
-            </div>
+            <Image
+              src="/assets/portrait.webp"
+              alt="The iglakovmaks avatar behind a laptop"
+              width={600}
+              height={827}
+              loading="eager"
+              className="portrait"
+            />
 
             <nav className="hero-index" aria-label="Project shortcuts">
               <p className="eyebrow">My apps</p>
