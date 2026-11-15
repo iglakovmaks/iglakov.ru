@@ -30,6 +30,7 @@
 body {
   min-width: 0;
   margin: 0;
+  background: var(--paper);
 }
 
 a { color: inherit; text-decoration: none; }
@@ -185,11 +186,13 @@ a { color: inherit; text-decoration: none; }
 .mobile-menu[open] .menu-icon::before { transform: rotate(45deg); }
 .mobile-menu[open] .menu-icon::after { transform: rotate(-45deg); }
 
-.mobile-menu-backdrop {
+.mobile-menu-backdrop { display: none; }
+
+.mobile-menu[open] .mobile-menu-backdrop {
   position: fixed;
   z-index: -1;
   inset: 0;
-  background: rgb(19 30 65 / 18%);
+  display: block;
 }
 
 .mobile-menu-panel {
@@ -246,15 +249,21 @@ a { color: inherit; text-decoration: none; }
 }
 
 .hero {
+  --portrait-width: clamp(200px, 22.5cqw, 360px);
+  isolation: isolate;
   overflow: clip;
   padding-top: clamp(26px, 3.2cqw, 54px);
   padding-bottom: clamp(40px, 5.5cqw, 88px);
 }
 
+.wordmark-stage, .portrait-stage { position: relative; }
+
 .wordmark {
+  position: relative;
+  z-index: 1;
   margin: 0;
   padding-block: .08em .1em;
-  color: #000;
+  color: var(--footer-blue);
   font-size: 15.45cqw;
   font-weight: 900;
   letter-spacing: -.028em;
@@ -272,7 +281,11 @@ a { color: inherit; text-decoration: none; }
   margin-top: clamp(-75px, -5.1cqw, -25px);
 }
 
-.hero-intro, .hero-index { margin-top: clamp(20px, 4.5cqw, 72px); }
+.hero-intro, .hero-index {
+  position: relative;
+  z-index: 3;
+  margin-top: clamp(20px, 4.5cqw, 72px);
+}
 .hero-intro { margin-top: clamp(38px, 6.25cqw, 96px); }
 
 .eyebrow {
@@ -312,14 +325,86 @@ a { color: inherit; text-decoration: none; }
 .hero-index a:is(:hover, :focus-visible) span,
 .contact-links a:is(:hover, :focus-visible) span { transform: translate(2px, -2px); }
 
-.portrait {
-  display: block;
-  width: clamp(200px, 22.5cqw, 360px);
+.portrait-stage {
+  width: var(--portrait-width);
   max-width: 100%;
+}
+
+.portrait {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
   height: auto;
   filter: drop-shadow(0 12px 14px rgb(16 19 33 / 13%));
   mask-image: linear-gradient(to bottom, #000 calc(100% - 11px), transparent 100%);
 }
+
+.pixel-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: none;
+  pointer-events: none;
+}
+
+.pixel-orbit--wordmark {
+  --orbit-x: 43cqw;
+  --orbit-y: 4.2cqw;
+  --orbit-tilt: 2.1cqw;
+}
+
+.pixel-orbit--portrait {
+  --orbit-x: calc(var(--portrait-width) * .73);
+  --orbit-y: calc(var(--portrait-width) * .17);
+  --orbit-tilt: calc(var(--portrait-width) * -.12);
+  top: 65%;
+}
+
+.hero-pixel {
+  --pixel-size: clamp(7px, .86cqw, 13px);
+  --pixel-color: #6c89ff;
+  --orbit-delay: 0s;
+  --orbit-time: 4.8s;
+  position: absolute;
+  width: var(--pixel-size);
+  height: var(--pixel-size);
+  margin: calc(var(--pixel-size) / -2);
+  background: var(--pixel-color);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 50%);
+  opacity: 0;
+}
+
+.hero-pixel::after {
+  position: absolute;
+  top: 125%;
+  left: 110%;
+  width: 45%;
+  height: 45%;
+  background: inherit;
+  opacity: .52;
+  content: '';
+}
+
+.hero-pixel:nth-child(2) {
+  --pixel-size: clamp(6px, .6cqw, 9px);
+  --pixel-color: #9ab3ff;
+  --orbit-delay: -1.2s;
+}
+
+.hero-pixel:nth-child(3) {
+  --pixel-size: clamp(6px, .68cqw, 10px);
+  --pixel-color: #506bf1;
+  --orbit-delay: -2.4s;
+}
+
+.hero-pixel:nth-child(4) {
+  --pixel-size: clamp(5px, .48cqw, 7px);
+  --pixel-color: #8ca5ff;
+  --orbit-delay: -3.6s;
+}
+
+.pixel-orbit--portrait .hero-pixel { animation-direction: reverse, reverse, normal; }
 
 .hero-index { width: min(100%, 195px); justify-self: end; }
 .hero-index ul, .project-grid, .contact-links { margin: 0; padding: 0; list-style: none; }
@@ -541,6 +626,18 @@ a { color: inherit; text-decoration: none; }
     --header-height: 54px;
     --header-offset: 9px;
   }
+  .sheet { position: relative; }
+
+  /* Keep the tint off the fixed click target so Safari samples the white page edge. */
+  .sheet:has(.mobile-menu[open])::after {
+    position: absolute;
+    z-index: 9;
+    inset: 0;
+    background: rgb(19 30 65 / 18%);
+    pointer-events: none;
+    content: '';
+  }
+
   .site-header {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 12px;
@@ -563,7 +660,7 @@ a { color: inherit; text-decoration: none; }
     gap: 28px;
     margin-top: -4.9cqw;
   }
-  .portrait { grid-row: 1; width: var(--portrait-width); }
+  .portrait-stage { grid-row: 1; }
   .hero-intro { margin-top: 0; text-align: center; }
   .hero-description {
     max-width: 18ch;
@@ -588,8 +685,39 @@ a { color: inherit; text-decoration: none; }
   .wordmark { animation: rise-in .8s var(--ease-out) both; }
   .portrait { animation: rise-in 1s .12s var(--ease-out) both; }
   .hero-intro, .hero-index { animation: rise-in .85s .26s var(--ease-out) both; }
-  .mobile-menu[open] .mobile-menu-backdrop { animation: menu-backdrop-in .35s ease-out both; }
+  .pixel-orbit { display: block; }
+  .hero-pixel {
+    animation-name: pixel-lap, pixel-depth, pixel-fade;
+    animation-duration: var(--orbit-time);
+    animation-timing-function: linear, steps(1, end), ease-in-out;
+    animation-delay: var(--orbit-delay);
+  }
+  @media (max-width: 700px) {
+    .sheet:has(.mobile-menu[open])::after { animation: menu-backdrop-in .35s ease-out both; }
+  }
   .mobile-menu[open] .mobile-menu-panel { animation: menu-in .55s var(--ease-out) both; }
+}
+
+@keyframes pixel-lap {
+  0%, 100% { transform: translate(var(--orbit-x), calc(-1 * var(--orbit-tilt))) scale(.92); }
+  12.5% { transform: translate(calc(.71 * var(--orbit-x)), calc(-.71 * (var(--orbit-y) + var(--orbit-tilt)))) scale(.78); }
+  25% { transform: translate(0, calc(-1 * var(--orbit-y))) scale(.7); }
+  37.5% { transform: translate(calc(-.71 * var(--orbit-x)), calc(.71 * (var(--orbit-tilt) - var(--orbit-y)))) scale(.78); }
+  50% { transform: translate(calc(-1 * var(--orbit-x)), var(--orbit-tilt)) scale(.92); }
+  62.5% { transform: translate(calc(-.71 * var(--orbit-x)), calc(.71 * (var(--orbit-y) + var(--orbit-tilt)))) scale(1.08); }
+  75% { transform: translate(0, var(--orbit-y)) scale(1.15); }
+  87.5% { transform: translate(calc(.71 * var(--orbit-x)), calc(.71 * (var(--orbit-y) - var(--orbit-tilt)))) scale(1.08); }
+}
+
+/* Switch sides only at the ends of the track, away from its subject. */
+@keyframes pixel-depth {
+  0%, 100% { z-index: 0; }
+  50% { z-index: 2; }
+}
+
+@keyframes pixel-fade {
+  0%, 100% { opacity: 0; }
+  7%, 91% { opacity: 1; }
 }
 
 @keyframes menu-in {

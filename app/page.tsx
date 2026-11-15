@@ -66,6 +66,17 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
   );
 }
 
+function PixelOrbit({ around }: { around: 'wordmark' | 'portrait' }) {
+  return (
+    <div className={`pixel-orbit pixel-orbit--${around}`} aria-hidden="true">
+      <span className="hero-pixel" />
+      <span className="hero-pixel" />
+      <span className="hero-pixel" />
+      <span className="hero-pixel" />
+    </div>
+  );
+}
+
 export default function HomePage() {
   return (
     <div className="sheet" id="top">
@@ -98,7 +109,10 @@ export default function HomePage() {
 
       <main>
         <section className="hero" aria-labelledby="hero-name">
-          <h1 className="wordmark" id="hero-name">iglakovmaks</h1>
+          <div className="wordmark-stage">
+            <h1 className="wordmark" id="hero-name">iglakovmaks</h1>
+            <PixelOrbit around="wordmark" />
+          </div>
           <div className="hero-content inset">
             <div className="hero-intro">
               <p className="eyebrow">Independent developer</p>
@@ -108,14 +122,17 @@ export default function HomePage() {
               </a>
             </div>
 
-            <Image
-              src="/assets/portrait.webp"
-              alt="The iglakovmaks avatar behind a laptop"
-              width={600}
-              height={827}
-              loading="eager"
-              className="portrait"
-            />
+            <div className="portrait-stage">
+              <Image
+                src="/assets/portrait.webp"
+                alt="The iglakovmaks avatar behind a laptop"
+                width={600}
+                height={827}
+                loading="eager"
+                className="portrait"
+              />
+              <PixelOrbit around="portrait" />
+            </div>
 
             <nav className="hero-index" aria-label="Project shortcuts">
               <p className="eyebrow">My apps</p>
